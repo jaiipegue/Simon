@@ -13,16 +13,20 @@
       <div id="verde" class="color verde right" data-color="verde"></div>
       <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
     </div>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
       const celeste = document.getElementById('celeste')
       const violeta = document.getElementById('violeta')
       const naranja = document.getElementById('naranja')
       const verde = document.getElementById('verde')
       const btnEmpezar = document.getElementById('btnEmpezar') // Obtener el ID  y guardarlo en la variable
-      const ULTIMO_NIVEL = 10
+      const ULTIMO_NIVEL = 1
+
+      
 
       class Juego { //clase juego
         constructor() {  //Constructor de la clase
+          this.inicializar = this.inicializar.bind(this)
           this.inicializar() //llama la funcion inicalizar
           this.generarSecuencia()
           setTimeout(this.siguienteNivel(), 500)
@@ -32,13 +36,21 @@
         inicializar() {
           this.elegirColor = this.elegirColor.bind(this)
           this.siguienteNivel = this.siguienteNivel.bind(this)
-          btnEmpezar.classList.add('hide') // inserta la clase hide en btnEmpezar
+          this.toggleBtnEmpezar()
           this.nivel = 1
           this.colores = { 
             celeste, // Javascript hace solo la asignacion de variables si tienen el mismo nombre
             violeta,
             naranja,
             verde
+          }
+        }
+
+        toggleBtnEmpezar() {
+          if (btnEmpezar.classList.contains('hide')){
+            btnEmpezar.classList.remove('hide')
+          } else {
+            btnEmpezar.classList.add('hide')
           }
         }
 
@@ -118,15 +130,31 @@
               this.nivel++
               this.eliminarEventosClick()
               if (this.nivel === (ULTIMO_NIVEL + 1)) {
-                // Ganó!
+                this.ganoElJuego()
               } else {
                 setTimeout(this.siguienteNivel, 1500)
               }
             }
           } else {
-            //perdió 
+            this.perdioElJuego() 
           }
         }
+
+        ganoElJuego(){
+          swal('SIMON DICE', 'ganaste el juego!','success')
+          .then(() => {
+            this.inicializar()
+          })
+        }
+
+        perdioElJuego(){
+          swal('SIMON DICE ','Perdiste :c','error')
+          .then(() => {
+            this.inicializar()
+            this.eliminarEventosClick()
+          })
+        }
+
       }
 
       function empezarJuego() { //Funcion que empieza el juego
