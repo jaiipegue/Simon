@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Simon Dice</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="gameboard">
+      <div id="celeste" class="color celeste left" data-color="celeste"></div>
+      <div id="violeta" class="color violeta right" data-color="violeta"></div>
+      <div id="naranja" class="color naranja left" data-color="naranja"></div>
+      <div id="verde" class="color verde right" data-color="verde"></div>
+      <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
+    </div>
+    <script>
+      const celeste = document.getElementById('celeste')
+      const violeta = document.getElementById('violeta')
+      const naranja = document.getElementById('naranja')
+      const verde = document.getElementById('verde')
+      const btnEmpezar = document.getElementById('btnEmpezar') // Obtener el ID  y guardarlo en la variable
+
+      class Juego { //clase juego
+        constructor() {  //Constructor de la clase
+          this.inicializar() //llama la funcion inicalizar
+          this.generarSecuencia()
+          this.siguienteNivel()
+        }
+
+        inicializar() {
+          btnEmpezar.classList.add('hide') // inserta la clase hide en btnEmpezar
+          this.nivel = 10 
+          this.colores = { 
+            celeste, // Javascript hace solo la asignacion de variables si tienen el mismo nombre
+            violeta,
+            naranja,
+            verde
+          }
+        }
+
+        generarSecuencia() {
+          this.secuencia = new Array(10).fill(0).map(n => Math.floor(Math.random() * 4));
+          // this.sequence = new Array(10).fill(0).map(n => Math.floor(Math.random() * 4))
+        }
+
+        siguienteNivel(){
+          this.iluminarSecuencia()
+        }
+
+        trasnformarNumeroAColor(numero) {
+          switch (numero) {
+            case 0:
+              return 'celeste'
+            case 1:
+              return 'violeta'
+            case 2:
+              return 'naranja'
+            case 3:
+              return 'verde'
+          }
+        }
+
+        iluminarSecuencia(){
+          for (let i = 0; i < this.nivel; i++) {
+            const color = this.trasnformarNumeroAColor(this.secuencia[i])
+            setTimeout ( () => this.iluminarColor(color), 1000 * i )
+          }
+        }
+
+        iluminarColor(color) {
+          this.colores[color].classList.add('light')
+          setTimeout(() => this.apagarColor(color), 350)
+        }
+
+        apagarColor(color){
+          this.colores[color].classList.remove('light')
+        }
+      }
+
+      function empezarJuego() { //Funcion que empieza el juego
+        window.juego = new Juego() //Crea objeto juego
+      }
+    </script>
+  </body>
+</html>
